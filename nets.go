@@ -154,8 +154,8 @@ func IPLessThan(a, b net.IP) bool {
 	return false
 }
 
-// IPNetNet takes an IPNet and returns an IPNet.IP is now the first address
-// on the network. E.g. when given 10.0.0.20/24, return 10.0.0.0/24.
+// IPNetNet takes an IPNet and returns an IPNet.IP that is now the first address
+// on the network. E.g. when given 10.0.0.20/24, it returns 10.0.0.0/24.
 func IPNetNet(ipnet net.IPNet) *net.IPNet {
 	ip, _ := NetRange(ipnet)
 	return &net.IPNet{IP: ip, Mask: ipnet.Mask}
