@@ -110,3 +110,34 @@ func BenchmarkNetRange(b *testing.B) {
 		resultIP = e
 	}
 }
+
+func TestNetRange(t *testing.T) {
+	newIPNet := func(s string) net.IPNet {
+		_, ipnet, _ := net.ParseCIDR(s)
+		return *ipnet
+	}
+	tests := []struct {
+		name      string
+		ipnet     net.IPNet
+		wantFirst net.IP
+		wantLast  net.IP
+	}{
+		{
+			name:      "2002:0000:0000:1234:abcd:ffff:c0a8:0100/124",
+			ipnet:     newIPNet("2002:0000:0000:1234:abcd:ffff:c0a8:0100/124"),
+			wantFirst: net.ParseIP("2002:0000:0000:1234:abcd:ffff:c0a8:0100"),
+			wantLast:  net.ParseIP("2002:0000:0000:1234:abcd:ffff:c0a8:010f"),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, got1 := NetRange(tt.ipnet)
+			if !reflect.DeepEqual(got, tt.wantFirst) {
+				t.Errorf("NetRange() got = %v, want %v", got, tt.wantFirst)
+			}
+			if !reflect.DeepEqual(got1, tt.wantLast) {
+				t.Errorf("NetRange() got1 = %v, want %v", got1, tt.wantLast)
+			}
+		})
+	}
+}
